@@ -1,0 +1,591 @@
+17/09/2017 10:30: 
+  Aim: |
+    Prior to portable drive preparations for forensic use, ensure that operations are performed on the correct device
+  Method: |
+    Using the SIFT distribution issue the following command:
+    `lsblk`
+  Result: |
+    NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+    sda      8:0    0   250G  0 disk 
+    ├─sda1   8:1    0   246G  0 part /
+    ├─sda2   8:2    0     1K  0 part 
+    └─sda5   8:5    0     4G  0 part [SWAP]
+    sdb      8:16   0  1000G  0 disk 
+    └─sdb1   8:17   0  1000G  0 part /cases
+    sdc      8:32   0 465.8G  0 disk 
+    └─sdc1   8:33   0 465.8G  0 part /media/sansforensics/Samsung_T1  
+    sr0     11:0    1  1024M  0 rom  
+17/09/2017 10:30: 
+  Aim: |
+    To prepare drive for forensic use by wiping it
+  Method: |
+    Using the SIFT distribution, use the dc3dd utility using the following command:
+    `dc3dd wipe=/dev/sdc log=dc3dd-wipe.txt`
+  Results: |
+    Drive completely wiped and overwritten with zeros. Command output shown below: 
+    dc3dd 7.1.614 started at 2017-09-17 02:26:23 +0000
+    compiled options:
+    command line: dc3dd wipe=/dev/sdc log=dc3dd-wipe.txt
+    device size: 976773168 sectors (probed)
+    sector size: 512 bytes (probed)
+    500107862016 bytes (466 G) copied (100%), 2950.29 s, 162 M/s
+    input results for pattern `00':
+       976773168 sectors in
+      
+      output results for device `/dev/sdc':
+       976773168 sectors out
+    
+    dc3dd completed at 2017-10-30 03:15:34 +0000
+17/09/2017 11:19:
+  Aim: |
+    XX Time check above XX
+    Check that the secure wipe was successfully completed
+  Method: |
+    Type in the following command:
+    `sudo dd if=/dev/sdc bs=512 count=1 | xxd`
+  Results: |
+    Observe that only zeros are shown in the output as per below
+    0000000: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+    0000010: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+    0000020: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+    [ELIDED]
+    00001e0: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+    00001f0: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+    1+0 records in
+    1+0 records out
+    512 bytes (512 B) copied, 0.000302152 s, 1.7 MB/s
+17/09/2017 11:20:
+  Aim: |
+    Format disk as NTFS in preparation for loading forensic capture
+  Method: |
+    Type in the following command:
+    `sudo gparted &`
+    From GUI Select Device | Create New Partition Table; select msdos
+    Right-click on the representation of the disk and select new, chose NTFS
+    Click the tick icon to apply changes
+  Results: |
+    Prompt with 'All operations successfully completed' appears
+    New NTFS partition created on the disk
+17/09/2017 11:37:
+  Aim: |
+    Download .7z files to target drive XXVerificationXX
+  Method: |
+    Download .7z files to target drive by selecting the newly formatted
+    drive as destination. Once files are in the newly formatted drive, use
+    the 7-zip utility to extract the archive and perform the following command to verify the integrity:
+    cd /media/sansforensics/Forensics/uni/CSG5126/Assignment2/Image
+    md5sum 2017-B.dd
+    044288459e2fd193e446eec8de0acdd9  2017-B.dd
+    Compare result with that obtained by running the command  `cat 2017-B.dd.txt`, where 2017-B.dd.txt is one
+    of the files extracted by 7-zip
+    MD5 checksum:    044288459e2fd193e446eec8de0acdd9 <<- matches
+    SHA1 checksum:   ca7eac1799ad0ca08917d889fb7b59238c7c488e
+  Result: |
+    Image successfully transferred to drive
+18/09/2017 22:12:
+  Aim: |
+    Identify contents of image
+  Method: |
+    Given that we do not have much information pertaining to the image that was acquired, we need to ascertain
+    whether the image corresponds to a hard disk volume or a single partition only.  The Sleuthkit provides a tool for 
+    doing this, mmls.  
+    The following command was executed in the folder containing the 2017-BB.dd raw image file:
+    `mmls -t dos 2017-B.dd`
+  Results: |
+    The following results were obtained:
+    Invalid sector address (dos_load_prim_table: Starting sector too large for image)
+    Inconclusive results
+18/09/2017 22:13:
+  Aim: |
+    Identify contents of image
+  Method: |
+    Given that the mmls command did not provide any meaningful information, we will re-try the process
+    with gparted using the following command:
+    `gpart -v 2017-B.dd`
+  Results: |
+    [ELIDED]
+    Begin scan...
+    End scan.
+
+    Checking partitions...
+    Ok.
+
+    Guessed primary partition table:
+    Primary partition(1)
+       type: 000(0x00)(unused)
+       size: 0mb #s(0) s(0-0)
+       chs:  (0/0/0)-(0/0/0)d (0/0/0)-(0/0/0)r
+       hex:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+    Primary partition(2)
+       type: 000(0x00)(unused)
+       size: 0mb #s(0) s(0-0)
+       chs:  (0/0/0)-(0/0/0)d (0/0/0)-(0/0/0)r
+       hex:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+    Primary partition(3)
+       type: 000(0x00)(unused)
+       size: 0mb #s(0) s(0-0)
+       chs:  (0/0/0)-(0/0/0)d (0/0/0)-(0/0/0)r
+       hex:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+    Primary partition(4)
+       type: 000(0x00)(unused)
+       size: 0mb #s(0) s(0-0)
+       chs:  (0/0/0)-(0/0/0)d (0/0/0)-(0/0/0)r
+       hex:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    Based on the above, we postulate that the image is of that of a single partition
+18/09/2017 22:18:
+  Aim: |
+    We attempt to find some file system information and will guess that the file system is fat32
+  Method: |
+    We execute the following command:
+    `fsstat -f fat32 2017-B.dd`
+  Result: |
+    The following result was obtained from running the above command:
+    `Invalid magic value (Not a FATFS file system (number of FATs))`
+    We conclude from this that the filesystem is not fat32
+18/09/2017 22:19:
+  Aim: |
+    We attempt to find some file system information and will guess that the file system is ntfs
+  Method: |
+    We execute the following command:
+    `fsstat -f ntfs 2017-B.dd`
+  Result: |
+    The following result was obtained from running the above command:
+    FILE SYSTEM INFORMATION
+    --------------------------------------------
+    File System Type: NTFS
+    Volume Serial Number: 682882B828828532
+    OEM Name: NTFS    
+    Version: Windows XP
+
+    METADATA INFORMATION
+    --------------------------------------------
+    First Cluster of MFT: 786432
+    First Cluster of MFT Mirror: 2
+    Size of MFT Entries: 1024 bytes
+    Size of Index Records: 4096 bytes
+    Range: 0 - 140032
+    Root Directory: 5
+
+    CONTENT INFORMATION
+    --------------------------------------------
+    Sector Size: 512
+    Cluster Size: 4096
+    Total Cluster Range: 0 - 4249598
+    Total Sector Range: 0 - 33996798
+    [ELIDED]
+
+    We conclude from the above that the filesystem is NTFS, with a sector size of 512 bytes and a
+    cluster size of 4096 bytes (i.e. 8 sectors per cluster)
+18/09/2017 23:30: 
+  Aim: |
+    To account for disk usage across the whole image captured
+  Method: |
+    Use the sigfind command to search for hex patterns in the image.  We'll start with an offset of 3
+    as NTFS magic number is usually on the third byte of an NTFS partition.  In hex, this translates to
+    N=4e
+    T=54
+    F=46
+    S=53
+    Hence the correct command is:
+    `sigfind -o 3 4e544653 2017-B.dd`
+  Result: |
+    The following output was obtained (listing matches found):
+    Block: 2435245 (+2435245)
+    Block: 2435373 (+128)
+    Block: 10891616 (+8456243)
+
+
+    Appears to be valid NTFS
+    Block: 12658821 (+1767205)
+
+    Appears to be valid NTFS
+    Block: 18614120 (+5955299)
+
+    Appears to be valid NTFS
+    Block: 19042992 (+428872)
+
+    Appears to be valid NTFS
+    Block: 19229024 (+186032)
+
+    Appears to be valid NTFS
+    Block: 19873232 (+644208)
+
+    Interesting message
+    Block: 23558461 (+3685229)
+
+    Appears to be valid NTFS
+    Block: 33996799 (+10438338)
+    error reading bytes 33996800
+
+    791  dd if=2017-B.dd skip=0 count=1 | xxd
+    792  dd if=2017-B.dd skip=2435245 count=1 | xxd
+    793  dd if=2017-B.dd skip=2435373 count=1 | xxd
+    794  dd if=2017-B.dd skip=10891616 count=1 | xxd
+    795  dd if=2017-B.dd skip=12658821 count=1 | xxd
+    796  dd if=2017-B.dd skip=18614120 count=1 | xxd
+    797  dd if=2017-B.dd skip=19042992 count=1 | xxd
+    798  dd if=2017-B.dd skip=19229024 count=1 | xxd
+    799  dd if=2017-B.dd skip=19873232 count=1 | xxd
+    800  dd if=2017-B.dd skip=23558461 count=1 | xxd
+    801  dd if=2017-B.dd skip=33996799 count=1 | xxd
+
+    802  dd if=2017-B.dd of=ntfs1.dd skip=12658821 count=1767204 
+    803  cd ~
+    804  ls
+    805  cd tmp
+    806  ls
+    807  cd ..
+    808* 
+    809  dd if=2017-B.dd of=ntfs2.dd skip=18614120 count=428871 
+    810  cd ~/Desktop/img
+    811  dd if=2017-B.dd of=ntfs2.dd skip=18614120 count=428871
+    812  cd /home/forensics/tmp
+    813  cd /home/sansforensics/tmp
+    814  ls
+    815  cd ~/Desktop/img
+    816  ls
+    817  sudo mount -t ntfs -o ro ntfs2.dd /home/sansforensics/tmp
+    818  umount tmp
+    819  umount ntfs2.dd
+    820  sudo umount ntfs2.dd
+    821  dd if=2017-B.dd of=ntfs1.dd skip=18614120 count=428871
+    822  dd if=2017-B.dd of=ntfs1.dd skip=12658821 count=5955298
+    823  sudo mount -t ntfs -o ro ntfs1.dd /home/sansforensics/tmp
+    824  dd if=2017-B.dd of=ntfs3.dd skip=19042992 count=186031
+    825  sudo mount -t ntfs -o ro ntfs3.dd /home/sansforensics/tmp
+    826  history
+    827  dd if=2017-B.dd of=ntfs4.dd skip=19229024 count=644207
+    828  dd if=2017-B.dd of=ntfs5.dd skip=19873232
+    829  sudo mount -t ntfs -o ro ntfs5.dd /home/sansforensics/tmp
+
+
+18/09/2017 00:49:
+  Aim: |
+    Index files on the image corresponding to the NTFS volume.  Indexing will also be performed by other GUI tools
+    on a Windows VM and the purpose of this activity is to generate data so as to compare these results
+    againts those generated by Autopsy
+  Method: |
+    File indexing to be obtained from running the sorter utility which is part of the Sleuth Kit toolkit
+    Files stored in folder ~/Desktop/save_dir in the SIFT VM
+    The following command was run:
+    `sorter -f ntfs -d ~/Desktop/save_dir -m C:/ 2017-B.dd`
+  Results: |
+    ~/Desktop/save_dir populated with several files listing the various matches found by file type.  
+    The following files were generated:
+    -rw-rw-r-- 1 sansforensics sansforensics  129 Sep 17 16:26 adobepdf.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  44K Sep 17 16:47 archive.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 106K Sep 17 16:47 audio.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  19K Sep 17 16:47 bmp.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  393 Sep 17 16:41 browser.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  13K Sep 17 16:47 compress.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 1.2K Sep 17 16:48 crypto.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 2.0K Sep 17 16:35 cursor.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  15K Sep 17 16:48 database.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  11M Sep 17 16:48 data.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 1.4K Sep 17 16:45 disk.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 100K Sep 17 16:47 documents.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 6.0M Sep 17 16:48 exec.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 123K Sep 17 16:47 fonts.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  57K Sep 17 16:44 gif.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 8.5K Sep 17 16:43 helpfiles.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  35K Sep 17 16:44 icm.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  25K Sep 17 16:47 icon.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 1.4K Sep 17 16:46 images.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 241K Sep 17 16:47 jpeg.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 120K Sep 17 16:41 lnk.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  51K Sep 17 16:43 lotus.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 1022 Sep 17 16:35 midi.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 2.3M Sep 17 16:48 mismatch.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 4.5M Sep 17 16:47 png.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  60K Sep 17 16:47 registry.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  821 Sep 17 16:48 sorter.sum
+    -rw-rw-r-- 1 sansforensics sansforensics 6.2K Sep 17 16:42 sqlite.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 7.8K Sep 17 16:44 system.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  387 Sep 17 16:46 tar.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 1.7M Sep 17 16:48 text.txt
+    -rw-rw-r-- 1 sansforensics sansforensics  353 Sep 17 16:33 tif.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 1.2M Sep 17 16:47 unicode.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 349K Sep 17 16:48 unknown.txt
+    -rw-rw-r-- 1 sansforensics sansforensics 3.8M Sep 17 16:47 xml.txt
+18/09/2017 00:55:
+    Aim: |
+        Preserve the integrity of the files in the save_dir
+    Method: |
+        The following command was executed:
+        md5sum *.txt > ~/Desktop/md5sum.txt
+    Results:
+        We generated an md5sum.txt file of all MD5 hashes associated with the above files
+19/09/2017 00:53:
+    Aim: |
+      Verify MFT entry without needing to peruse the entire image
+    Method: |
+      Execute the following command: 
+      `icat 2017-B.dd 0 > mft.raw`
+      Verify hash:
+      `md5sum mft.raw`
+    Results: |
+      mft.raw file generated for persusal in HexEditor tools
+20/09/2017 21:21:
+  Aim: |
+    Identify any files that may have been deleted
+  Method: |
+    Run scalpel to identify any files that may have been deleted
+  Results: |
+    XX TBA XX
+21/09/2017 19:01:
+  Aim: |
+    Peruse the filesystem looking for probative information
+  Method: |
+    Using the investigator version of XX WinHex view the image as a drive XX
+    Navigate around and determine any areas which may require further investigation
+  Results: |
+    XX
+1/10/2017 13:52:
+  Aim: |
+    Investigate Windows Registry to identify files which may be pertinent to the investigation. Informs Issues #1 through to #4
+  Method: |
+    The OSFMount tool was used to mount the 2017-B.dd image on a Windows drive.  Following this, we run the RegRipper
+    utility by executingthe rr.exe binary. All Windows applications were run with Administrator privileges.  
+    We ran the RegRipper tool, selected the folder containing the 2017-B.dd image from the previously specified
+    drive mount for the image, selected the target folder for the report and specified the 'ntuser' profile.
+  Result: |
+    A scan of the ntuser.txt file, generated from this process, yielded a list of the user's MRU files (with
+    the aid of the recentdocs plug-in).  We identified a number of files to be further investigated with the aid of   
+    Autopsy.  In particular, this process identified: 20 jpg files, 9 doc|docx files, 4 txt files, 4 html files,
+    1 zip file and 1 pdf file.
+1/10/2017 14:01:
+  Aim: |
+    Investigate applications installed on the computer through an analysis of the Windows Registry.  Informs Issue #5
+  Method: |
+    For this task RegRipper was used to investigate an image previously mounted via OSFMount. RegRipper was used against the
+    the appropriate registry hive files in the C:\Windows\System32\config folder (i.e. SAM, SECURITY, software and system) 
+    as well as the C:\Users\computer\NTSER.DAT hive.  We then used PowerGrep5 to do a search across the folder where these
+    reports had been saved for entries corresponding to applications such as TrueCrypt.exe and CCCleaner.exe which were
+    identified when we browsed through the various folders in the file system.
+  Result: |
+    From an investigation of the files of interest in the investigation, we verified through the registry analysis the
+    applications associated with these file types.
+    We were able to ascertain that the following applications had been used in association with the access, modification
+    and/or changes made to files of interest and these include:
+    The appcompatflags plug in lists all applications that were scanned for Windows compatibility upon for their first execution. 
+    appcompatflags v.20130930
+    (NTUSER.DAT, Software) Extracts AppCompatFlags for Windows.
+    [ELIDED]
+    Sat Mar 18 20:58:39 2017 - C:\Users\computer\AppData\Local\Microsoft\OneDrive\17.3.6816.0313\FileSyncConfig.exe
+    Sat Mar 18 20:58:39 2017 - SIGN.MEDIA=B62FA6B5 Firefox Setup 53.0.2.exe
+    Sat Mar 18 20:58:39 2017 - SIGN.MEDIA=B62FA6B5 Thunderbird Setup 52.1.1.exe
+    Sat Mar 18 20:58:39 2017 - SIGN.MEDIA=B62FA6B5 office_free_2013.exe
+    Sat Mar 18 20:58:39 2017 - C:\Program Files (x86)\Kingsoft\Kingsoft Office\office6\wps.exe
+    Sat Mar 18 20:58:39 2017 - C:\Program Files (x86)\Mozilla Thunderbird\thunderbird.exe
+    Sat Mar 18 20:58:39 2017 - C:\Users\computer\AppData\Roaming\Kingsoft\office6\update\down\setup_XA_en_10.2.0.5811_Free.exe
+    Sat Mar 18 20:58:39 2017 - C:\Users\computer\Downloads\TrueCrypt Setup 7.1a.exe
+    Sat Mar 18 20:58:39 2017 - C:\Users\computer\Downloads\TrueCrypt\TrueCrypt.exe
+    Sat Mar 18 20:57:20 2017 - C:\Program Files\Synaptics\SynTP\SynTPHelper.exe
+    Sat Mar 18 20:58:39 2017 - C:\Users\computer\Downloads\TrueCrypt\TrueCrypt Format.exe
+    Sat Mar 18 20:58:39 2017 - C:\Program Files (x86)\Kingsoft\Kingsoft Office\ksolaunch.exe
+    Sat Mar 18 20:58:39 2017 - C:\Users\computer\Downloads\TeamViewer_Setup.exe
+    Sat Mar 18 20:58:39 2017 - C:\Users\computer\Downloads\torbrowser-install-7.0.1_en-US.exe
+    Sat Mar 18 20:58:39 2017 - C:\Program Files (x86)\Kingsoft\Kingsoft Office\10.2.0.5811\office6\wps.exe
+    Sat Mar 18 20:58:39 2017 - C:\Users\computer\Downloads\mirc749.exe
+    Sat Mar 18 20:58:39 2017 - C:\Program Files (x86)\mIRC\mirc.exe
+    Sat Mar 18 20:57:20 2017 - C:\Program Files\Mozilla Firefox\firefox.exe
+    Sat Mar 18 20:58:39 2017 - C:\Users\computer\AppData\Local\Microsoft\OneDrive\Update\OneDriveSetup.exe
+    Sat Mar 18 20:58:39 2017 - C:\Users\computer\AppData\Local\Microsoft\OneDrive\17.3.6943.0625\FileSyncConfig.exe
+    Sat Mar 18 20:57:20 2017 - C:\Program Files\Mozilla Firefox\updater.exe
+    Sat Mar 18 20:58:39 2017 - C:\Users\computer\Downloads\ccsetup532.exe
+
+    UserAssist is a method used to populate a user’s start menu with frequently used applications. 
+    This is achieved by maintaining a count of application use in each users NTUSER.DAT registry file.
+    An analysis of this data, including converting the datetime information to the local timezone from UTC,
+    we have obtained the following:
+    2017-07-27 13:59:58+08:00|File Explorer.lnk|34
+    2017-07-27 13:51:52+08:00|Mozilla Firefox.lnk|13
+    2017-06-14 11:13:55+08:00|windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel|12
+    2017-06-14 08:04:52+08:00|notepad.exe|10
+    2017-05-09 08:08:04+08:00|Snipping Tool.lnk|9
+    2017-05-31 06:36:26+08:00|mspaint.exe|9
+    2017-05-09 08:08:04+08:00|Paint.lnk|7
+    2017-05-09 08:08:04+08:00|Notepad.lnk|6
+    2017-06-08 07:52:45+08:00|computer.lnk|5
+    2017-05-19 03:50:45+08:00|Mozilla Thunderbird.lnk|4
+    2017-06-12 11:51:31+08:00|Mozilla Thunderbird.lnk|3
+    2017-06-14 11:13:27+08:00|Microsoft.MicrosoftEdge_8wekyb3d8bbwe!MicrosoftEdge|3
+    2017-07-27 14:23:50+08:00|wps.exe|3
+    2017-05-17 09:42:17+08:00|Thunderbird Setup 52.1.1.exe|2
+    2017-05-17 11:39:27+08:00|Kingsoft Writer.lnk|2
+    2017-05-23 06:22:54+08:00|rundll32.exe|2
+    2017-05-31 06:36:36+08:00|microsoft.windowscommunicationsapps_8wekyb3d8bbwe!microsoft.windowslive.mail|2
+    2017-06-14 07:43:31+08:00|TrueCrypt Format.exe|2
+    2017-06-14 07:50:06+08:00|TrueCrypt.exe|2
+    2017-05-17 09:31:05+08:00|Firefox Setup 53.0.2.exe|1
+    2017-05-17 09:44:21+08:00|office_free_2013.exe|1
+    2017-05-17 11:39:53+08:00|wps.exe|1
+    2017-05-17 16:21:28+08:00|Command Prompt.lnk|1
+    2017-05-17 16:22:41+08:00|mmc.exe|1
+    2017-05-17 16:40:32+08:00|TrueCrypt Setup 7.1a.exe|1
+    2017-05-23 06:18:03+08:00|UserAccountControlSettings.exe|1
+    2017-06-14 07:57:10+08:00|WPS Writer.lnk|1
+    2017-06-14 09:01:44+08:00|TeamViewer_Setup.exe|1
+    2017-06-14 09:15:53+08:00|torbrowser-install-7.0.1_en-US.exe|1
+    2017-07-27 13:31:18+08:00|mIRC.lnk|1
+    2017-07-27 13:32:39+08:00|firefox.exe|1
+    2017-07-27 14:02:26+08:00|ccsetup532.exe|1
+2/10/2017 21:03:
+  Aim: |
+    To identify any emails which may contain probative evidence.  We have already established by
+    a perusal of the files that the subject under investigation used Thunderbird as their email client. The
+    initial objective will be to extract the sqlite associated with the local mail store and to use a tool such as
+    Navicat to peruse the database
+  Method: |
+    XX Where was the file, how extracted, etc.
+    Identify and extract sqlite database corresponding to Thunderbird's email store.
+    Extracted the sqlite database corresponding to Thunderbird's email store.  
+  Results: |
+    A perusal of this archive led to the discovery of some interesting artefacts which would warrant a full export of the MBOXRD files for further inspection
+2/10/2017 21:10:
+  Aim: |
+    Further investigate emails by extracting MBOXRD files and using the Thunderbird email client on the Windows VM
+    to investigate the email flow in more detail
+  Method: |
+    The following steps are applicable:
+    1. Install Thunderbird client
+    2. Extract MBOXRD file
+    3. Peruse emails
+    The MBOXRD file will be extracted using WinHex export to capability
+    The Thunderbird client will be launched with the following commands:
+    `C:\Users\rdapaz>"C:\Program Files\Mozilla Thunderbird\thunderbird.exe" -profile C:\Users\rdapaz\CaseData\Users\computer\AppData\Roaming\Thunderbird\Profiles\k71ku0d7.default`
+  Results: |
+    Identified motive.  It is presumed that Clark obtained and distributed illegal cat pictures following an 
+    extortionist request by <> who requested that Clark distribute pictures of cats, etc. or risk having his superman
+    identify revealed.  The body of various emails was captured.
+3/10/2017 22:15:
+  Aim: |
+    Identify contents of one of the emails which seems to contain encrypted material using a password supplied 
+    by subject 2 in one of the emails to XX Clark Kent XX
+  Method: |
+    Installed Truecrypt as a portable instance on the Windows VM
+    Ran Truecrypt pointing to stuff.txt file and mounted it on drive Y: on the Windows VM
+  Results: |
+    Identified one file of probative value.  Generated MD5 hash to include as evidence
+4/10/2017 10:16: 
+    Aim: |
+      Investigate registry to ascertain dates in which software packages of interest were installed on Clark's laptop, specifically TrueCrypt which was used in order to decrypt information on one of the emails
+    Method: |
+      Use Regripper
+    Results: |
+      Through the above we were able to ascertain the following information
+      <list here>
+4/10/2017 11:52: 
+    Aim: |
+      Progress registry analysis to find other probative evidence
+    Method: |
+      Completed running several the Perl rip.pl Registry Ripper utility to obtain
+      values from the registry
+      perl rip.pl -r /mnt/forensics/Documents\ and\ Settings/computer/NTUSER.DAT -p userassist > /home/sansforensics/Desktop/CaseData/registry_userassist.txt
+      perl rip.pl -r /mnt/forensics/Documents\ and\ Settings/computer/NTUSER.DAT -p typedurls > /home/sansforensics/Desktop/CaseData/registry_typedurls.txt
+      perl rip.pl -r /mnt/forensics/Documents\ and\ Settings/computer/NTUSER.DAT -p logonusername > /home/sansforensics/Desktop/CaseData/registry_logonusername.tx
+      perl rip.pl -r /mnt/forensics/Documents\ and\ Settings/computer/NTUSER.DAT -p runmru > /home/sansforensics/Desktop/CaseData/registry_runmru.tx
+      perl rip.pl -r /mnt/forensics/Documents\ and\ Settings/computer/NTUSER.DAT -p filehistory > /home/sansforensics/Desktop/CaseData/registry_filehistory.tx
+      perl rip.pl -r /mnt/forensics/Windows/System32/config/SOFTWARE -p networklist_tln > /home/sansforensics/Desktop/CaseData/registry_networklist_tln.txt
+      perl rip.pl -r /mnt/forensics/Windows/System32/config/SOFTWARE -p winlogon_tln > /home/sansforensics/Desktop/CaseData/registry_winlogon.txt
+      perl rip.pl -r /mnt/forensics/Windows/System32/config/SOFTWARE -p networklist_tln > /home/sansforensics/Desktop/CaseData/registry_networklist_tln.txt
+      perl rip.pl -r /mnt/forensics/Documents\ and\ Settings/computer/NTUSER.DAT -p mpmru > /home/sansforensics/Desktop/CaseData/registry_mpmru.tx
+      perl rip.pl -r /mnt/forensics/Windows/System32/config/SOFTWARE -p product > /home/sansforensics/Desktop/CaseData/registry_product.txt
+      perl rip.pl -r /mnt/forensics/Documents\ and\ Settings/computer/NTUSER.DAT -p typedurlstime > /home/sansforensics/Desktop/CaseData/registry_typedurlstime.tx
+      perl rip.pl -r /mnt/forensics/Documents\ and\ Settings/computer/NTUSER.DAT -p recentdocs_timeline > /home/sansforensics/Desktop/CaseData/recentdocs_timeline.txt
+    Results: |
+      Through the above we were able to ascertain the following information
+      <list here>
+4/10/2017 12:16: 
+    Aim: |
+      Recover files identified from registry investigation as being pertinent
+    Method: |
+      Use the icat command to recover files as shown below:
+      Question how determined inode
+      icat 2017-B.dd 86299 > /home/sansforensics/Desktop/3295.doc
+      icat 2017-B.dd 92500 > /home/sansforensics/Desktop/3250.doc
+      icat 2017-B.dd 94309 > /home/sansforensics/Desktop/TOP SECRET.doc
+      icat 2017-B.dd 94309 > /home/sansforensics/Desktop/TOP\ SECRET.doc
+      icat 2017-B.dd 89751 > /home/sansforensics/Desktop/places.sqlite
+    Results: |
+      Files generated and inspected
+4/10/2017 12:24:
+    Aim: |
+      Generate MD5 hashes for files recovered in the previous steps
+    Method:
+      XX for f in ls; do md5sum $f; done XX
+    Results:
+      Files XXVerificationXX
+4/10/2017 13:10:
+    Aim: |
+      IRC analysis
+    Method: |
+      XX Do blah XX
+    Results: |
+      XX We were able to identify that Clarke is the man XX
+31/10/2017 23:28: 
+    Aim: |
+      Generate evidence to further refute the claim that the illegal files were accessed or downloaded by
+      a virus.
+    Method: |
+      The following steps were performed:
+      1.  Installed clamav on the SIFT VM
+      2.  Downloaded the latest virus definitions to the VM
+      3.  Mounted the drive and ran a scan
+      The following commands were used:
+      cd ~
+      mkdir ./tmp
+      cd 
+      mount -t ntfs -o rw 2017-B.dd ~/tmp
+      sansforensics@siftworkstation:~$ sudo freshclam
+      sansforensics@siftworkstation:~$ clamscan -r -i ./tmp
+    Results: |
+      The following results were obtained:
+      ----------- SCAN SUMMARY -----------
+      Known viruses: 6328254
+      Engine version: 0.99.2
+      Scanned directories: 11873
+      Scanned files: 76347
+      Infected files: 0
+      Total errors: 181 << why?
+      Data scanned: 12304.35 MB < size of drive
+      Data read: 16799.86 MB (ratio 0.73:1)
+      Time: 2209.602 sec (36 m 49 s)
+      It should be noted that a number of error messages were generated as follows:
+      LibClamAV Error: fmap_readpage: pread error: Input/output error
+      We have not been able to ascertain the cause for the above error message and/or determine any potential 
+      impact on the scan results obtained.  However, based on the above we conclude that no malware appeared to 
+      be present on the subject's computer at the time that the forensic image was acquired.
+1/11/2017 23:37: 
+  Aim: |
+    Verify file count as identified from Autopsy
+  Method: |
+    blah
+  Results: |
+    blah
+5/11/2017 20:29:
+  Aim:
+    To identify any files and file remnants which may have been left behind through the
+    use of CCleaner, which is known to replace characters in the filename with Zs so that
+    cat.jpg would become ZZZ.ZZZ.
+  Method:
+    Using WinHex Specialist edition, we attempted a simultaneous search for .ZZZ with
+    the ANSI and Unicode checkboxes selected and with the match case checkbox selected.
+    This yielded several 
+5/11/2017 21:42:
+  Aim:
+    To identify the password for file stuff.txt which is compressed
+  Method:
+    XX One of the word documents XX, had an interesting entry which stated "the password is supe"
+    An attempt was initially made to enter the words "supe" and the entire statement as well
+    as the password for the other Truecrypt encrypted archive "superman".  In order to attempt
+    to identify the password, the pagefile.sys file was carved from the image and 
+    a word search was attempted in WinHex Specialist Edition to seek out passwords.  Default Settings
+    were used.  After narrowing down these entries to only words commencing with "supe", we 
+    identified capitalised and non-capitalised versions of "superfish", "supergat", "supermark"
+    "supernatural" and "superior" without successfully
+  Result:
+    Unfortunately, we have not been able to de-crypt this file.
