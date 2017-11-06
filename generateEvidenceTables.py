@@ -11,6 +11,11 @@ def pretty_printer(o):
     pp.pprint(o)
 
 
+def pairwise(iterable):
+    "s -> (s0, s1), (s2, s3), (s4, s5), ..."
+    a = iter(iterable)
+    return zip(a, a)
+
 class Word:
     def __init__(self, path):
         self.path = path
@@ -33,29 +38,47 @@ class Word:
         rge.InsertAfter("\n\n")
         rge.Select()
 
-    def updateTable(self, tbl_id, data):
+    def updateTable(self, tbl_id, datarow1, datarow2):
         table = self.doc.Tables(tbl_id)
-        fileName, folder, ext, modified, changed, accessed, created, size, hash = data
+        fileName, folder, ext, modified, changed, accessed, created, size, hash = datarow1
         table.Cell(2, 2).Range.Text = fileName
-        table.Cell(3, 2).Range.Text = ext
-        table.Cell(4, 2).Range.Text = ''
-        table.Cell(5, 2).Range.Text = hash
-        table.Cell(6, 2).Range.Text = accessed
-        table.Cell(7, 2).Range.Text = created
-        table.Cell(8, 2).Range.Text = modified
-        table.Cell(9, 2).Range.Text = changed
-        table.Cell(10, 2).Range.Text = ''
-        table.Cell(11, 2).Range.Text = size
-        table.Cell(12, 2).Range.Text = ''
+        table.Cell(3, 2).Range.Text = folder
+        table.Cell(4, 2).Range.Text = ext
+        table.Cell(5, 2).Range.Text = ''
+        table.Cell(6, 2).Range.Text = hash
+        table.Cell(7, 2).Range.Text = accessed
+        table.Cell(8, 2).Range.Text = created
+        table.Cell(9, 2).Range.Text = modified
+        table.Cell(10, 2).Range.Text = changed
+        table.Cell(11, 2).Range.Text = ''
+        table.Cell(12, 2).Range.Text = size
+        table.Cell(13, 2).Range.Text = ''
+
+        fileName, folder, ext, modified, changed, accessed, created, size, hash = datarow2
+        table.Cell(2, 5).Range.Text = fileName
+        table.Cell(3, 5).Range.Text = folder
+        table.Cell(4, 5).Range.Text = ext
+        table.Cell(5, 5).Range.Text = ''
+        table.Cell(6, 5).Range.Text = hash
+        table.Cell(7, 5).Range.Text = accessed
+        table.Cell(8, 5).Range.Text = created
+        table.Cell(9, 5).Range.Text = modified
+        table.Cell(10, 5).Range.Text = changed
+        table.Cell(11, 5).Range.Text = ''
+        table.Cell(12, 5).Range.Text = size
+        table.Cell(13, 5).Range.Text = ''
+
 
 
     def generateEvidence(self, data):
+        """ Need to ensure that data has an even size"""
         self.initialise()
 
-        for tbl_id, entry in enumerate(data):
-                self.insert_table(autoTextName='evt')
-                self.updateTable(tbl_id+1, entry)
-
+        tbl_id = 0
+        for data_row1, data_row2 in pairwise(data):
+            tbl_id += 1
+            self.insert_table(autoTextName='evt1')
+            self.updateTable(tbl_id, data_row1, data_row2)
 
 data = """
 /img_2017-B.dd/Users/computer/Pictures/101438745-cat-conjunctivitis-causes.jpg|2017-06-12 12:01:49 AWST|2017-06-12 12:01:49 AWST|2017-06-12 12:01:47 AWST|2017-06-12 12:01:47 AWST|2528414|0b057be67f220767dd1075594432e8b8
@@ -77,12 +100,13 @@ data = """
 data = [x.split('|') for x in data if len(x) > 0]
 
 new_data = []
+""" Todo: check all files against the file command in SIFT"""
 for fullName, modified, changed, accessed, created, size, hash in data:
     file = os.path.basename(fullName)
     folder = os.path.dirname(fullName)
-    ext = os.path.splitext(fullName)[1]
+    ext = (os.path.splitext(fullName)[1])[1:].upper() #This is cheating but will do manual check later
     new_data.append([file, folder, ext, modified, changed, accessed, created, size, hash])
 
-wordTemplatePath = r'C:\Users\ric\Dropbox\Uni\CSG5126\Assignment 2\CSG5126 Assignment 2 - Presentation of Content.docx'
+wordTemplatePath = r'C:\Users\ric\Dropbox\Uni\CSG5126\Assignment 2\CSG5126 Assignment 2 - Presentation of ContentV2.docx'
 word = Word(wordTemplatePath)
 word.generateEvidence(new_data)
