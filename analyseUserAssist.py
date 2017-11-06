@@ -29,7 +29,7 @@ for dt, exec_list in data.items():
             file = os.path.basename(fullname)
             execs.append([dt2, file, count])
 
-execs = list(reversed(sorted(execs, key=lambda x: int(x[2]))))
+execs = list(reversed(sorted(execs, key=lambda x: x[0])))
 
 for dt, exec, count in execs:
     print(dt, exec, count, sep="|")
