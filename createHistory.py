@@ -1,11 +1,16 @@
-import re
+
 import pprint
 import os.path
-from datetime import datetime, timedelta
+import datetime
+import yaml
+import sqlite3
+import json
 
 def pretty_printer(o):
     pp = pprint.PrettyPrinter(indent=4)
     pp.pprint(o)
+
+history = []
 
 
 data = """
@@ -26,47 +31,95 @@ data = """
 """.splitlines()
 
 data = [x.split('|') for x in data if len(x) > 0]
-
-history = []
+'''
 for fullpath, modified, _ in data:
     file = os.path.basename(fullpath)
     modified = modified[:16]
-    modified = datetime.strptime(modified, '%Y-%m-%d %H:%M')
+    modified = datetime.datetime.strptime(modified, '%Y-%m-%d %H:%M')
     event = f'Modified file {file}'
     history.append([modified, event])
-
+'''
 for fullpath, _, created in data:
     file = os.path.basename(fullpath)
     created = created[:16]
-    created = datetime.strptime(created, '%Y-%m-%d %H:%M')
+    created = datetime.datetime.strptime(created, '%Y-%m-%d %H:%M')
     event = f'Created file {file}'
     history.append([created, event])
 
+path_to_db = r'places.sqlite'
+
+TIMEBAND = 60 # in hours
+
+augmented_history = []
+with sqlite3.connect(path_to_db) as conn:
+    cursor = conn.cursor()
+
+    for dttm, event in history:
+        augmented_history.append([dttm.strftime('%Y-%m-%d %H:%M'), event, 'File creation event'])
+        
+        dttm1 = dttm - datetime.timedelta(minutes=TIMEBAND)
+        dttm2 = dttm + datetime.timedelta(minutes=TIMEBAND)
+
+        sql = """
+            SELECT dt, url, title, url_hash FROM (
+            SELECT moz_places.id, 
+            datetime (visit_date/1000000,'unixepoch','localtime') AS visit_date, 
+            strftime('%Y-%m-%d %H:%M',datetime (visit_date/1000000,'unixepoch','localtime')) AS dt,
+            url, title,visit_count,typed,hidden,frecency, url_hash FROM moz_places, moz_historyvisits 
+            WHERE moz_places.id=moz_historyvisits.place_id 
+            AND (url LIKE '%cat%' OR url LIKE '%youtube%') AND (dt BETWEEN ? AND ?) LIMIT 5)
+            """
+        cursor.execute(sql, [dttm1.strftime('%Y-%m-%d %H:%M'), dttm2.strftime('%Y-%m-%d %H:%M')])
+
+        for row in cursor.fetchall():
+            dt, url, title, url_hash = row
+            if len(augmented_history) > 0:
+                if url_hash not in [x[2] for x in augmented_history]:
+                    augmented_history.append([dt, f'{title}\n{url}', url_hash])
+            else:
+                augmented_history.append([dt, f'{title}\n{url}', url_hash])
+
+
+with open(r'email_exchanges.yaml', 'r') as fin:
+    email_timeline = yaml.load(fin)
+
+email_timeline = [[datetime.datetime.strptime(x, '%d/%m/%Y %H:%M'), y] for x, y in email_timeline.items()]
+
+for dttm, email_info in email_timeline:
+    augmented_history.append([dttm.strftime('%Y-%m-%d %H:%M'), email_info, 'Email interaction event'])
+
+
+
+# '''
 #Here we use the information that we already had developed from our analysis
 #of UserAssist
 
 more_data = """
-2017-06-14 07:57:10+08:00|Last launched WPS Writer
-2017-06-14 07:50:06+08:00|Last launched TrueCrypt
-2017-06-14 07:43:31+08:00|Last formatted a drive with TrueCrypt
-2017-06-12 11:51:31+08:00|Last launched Mozilla Thunderbird
-2017-05-31 06:36:26+08:00|Last launched MSPaint
-2017-05-23 06:18:03+08:00|Last modified UAC Settings
-2017-05-19 03:50:45+08:00|Last launched Mozille from a linkMozilla Thunderbird.lnk
-2017-05-17 16:40:32+08:00|First set up TrueCrypt
-2017-05-17 11:39:53+08:00|Last launched WPS Writer from the command line
-2017-05-17 11:39:27+08:00|Last launched Kingsoft /WPS Writer
-2017-05-17 09:42:17+08:00|First installed Thunderbird
-2017-05-17 09:31:05+08:00|First installed Firefox
-2017-05-09 08:08:04+08:00|Last launched MSPaint from link
-2017-05-09 08:08:04+08:00|Last lauched Snipping Tool link
+2017-06-14 07:57:10+08:00|Launched WPS Writer
+2017-06-14 07:50:06+08:00|Launched TrueCrypt
+2017-06-14 07:43:31+08:00|Formatted a drive with TrueCrypt
+2017-06-12 11:51:31+08:00|Launched Mozilla Thunderbird
+2017-05-31 06:36:26+08:00|Launched MSPaint
+2017-05-19 03:50:45+08:00|Launched Mozilla Thunderbird from a link
+2017-05-17 16:40:32+08:00|Set up TrueCrypt
+2017-05-17 11:39:53+08:00|Launched WPS Writer from the command line
+2017-05-17 11:39:27+08:00|Launched Kingsoft /WPS Writer
+2017-05-17 09:42:17+08:00|Installed Thunderbird
+2017-05-17 09:31:05+08:00|Installed Firefox
+2017-05-09 08:08:04+08:00|Launched MSPaint from link
+2017-05-09 08:08:04+08:00|Lauched Snipping Tool link
 """.splitlines()
 
 more_data = [x.split('|') for x in more_data if len(x) > 0]
 
 for dttm, event in more_data:
     dttm = dttm[:16]
-    dttm = datetime.strptime(dttm, '%Y-%m-%d %H:%M')
-    history.append([dttm, event])
+    dttm = datetime.datetime.strptime(dttm, '%Y-%m-%d %H:%M')
+    augmented_history.append([dttm.strftime('%Y-%m-%d %H:%M'), event, 'Application install/run event'])
+# '''
+augmented_history =sorted(augmented_history, key=lambda x: x[0])
+pretty_printer(augmented_history)
+print(len(augmented_history))
 
-pretty_printer(history)
+with open(r'C:\Users\rdapaz\projects\csg5126_assignment2_scripts\history.json', 'w') as fout:
+    json.dump(augmented_history, fout, indent=True)

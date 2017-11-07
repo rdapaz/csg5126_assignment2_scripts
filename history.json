@@ -1,0 +1,252 @@
+[
+ [
+  "2017-05-09 08:08",
+  "Launched MSPaint from link",
+  "Application install/run event"
+ ],
+ [
+  "2017-05-09 08:08",
+  "Lauched Snipping Tool link",
+  "Application install/run event"
+ ],
+ [
+  "2017-05-17 09:31",
+  "Installed Firefox",
+  "Application install/run event"
+ ],
+ [
+  "2017-05-17 09:42",
+  "Installed Thunderbird",
+  "Application install/run event"
+ ],
+ [
+  "2017-05-17 11:32",
+  "Created file #3247.docx",
+  "File creation event"
+ ],
+ [
+  "2017-05-17 11:34",
+  "Created file #3249.docx",
+  "File creation event"
+ ],
+ [
+  "2017-05-17 11:39",
+  "Launched WPS Writer from the command line",
+  "Application install/run event"
+ ],
+ [
+  "2017-05-17 11:39",
+  "Launched Kingsoft /WPS Writer",
+  "Application install/run event"
+ ],
+ [
+  "2017-05-17 11:45",
+  "Created file #3250.docx",
+  "File creation event"
+ ],
+ [
+  "2017-05-17 15:55",
+  "Subject: URGENT READ THIS\nEmail from David Deida <daviddeida273@gmail.com> to Clark <kcent00@gmail.com>:\n\"Hello Clark or should I call you S....wait wait that would be to easy...\n\nI prepared a headline for a future news story...it would be in your best interest to check out the attached file...I've encrypted it using a standard truecrypt file container...the password is how about we use the password superman\n\nI'll be in touch!\"\n1 attachment: foryou.txt\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-05-17 16:34",
+  "Created file foryou.txt",
+  "File creation event"
+ ],
+ [
+  "2017-05-17 16:34",
+  "Created file foryou.txt",
+  "File creation event"
+ ],
+ [
+  "2017-05-17 16:40",
+  "Created file TrueCrypt User Guide.pdf",
+  "File creation event"
+ ],
+ [
+  "2017-05-17 16:40",
+  "Set up TrueCrypt",
+  "Application install/run event"
+ ],
+ [
+  "2017-05-17 16:44",
+  "Subject: Re.: URGENT READ THIS\nEmail from Clark <kcent00@gmail.com> to David Deida <daviddeida273@gmail.com>:\n\"I don't know who you are or why you think this would have anything to do with me, but you have the wrong person.\"\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-05-18 05:43",
+  "Subject: Re.: URGENT READ THIS\nEmail from Clark <kcent00@gmail.com> to David Deida <daviddeida273@gmail.com>: \n\"You have my attention, what do you want from me?\"\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-05-18 08:32",
+  "Subject: Re.: URGENT READ THIS\nEmail from David Deida <daviddeida273@gmail.com> to Clark <kcent00@gmail.com>:\n\"You will do precisely as I say or the whole world will know your little secret, superman!\"\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-05-19 03:50",
+  "Launched Mozilla Thunderbird from a link",
+  "Application install/run event"
+ ],
+ [
+  "2017-05-19 04:13",
+  "Email from Clark <kcent00@gmail.com> to David Deida <daviddeida273@gmail.com>:\nSubject: Re.: URGENT READ THIS\n\"I don't know who you are. I don't know why you are doing this. If you are looking for a ransom, I can tell you I don't have any money. But what I do have are a very particular set of skills, skills I have acquired over a very long career. Skills that make me a nightmare for people like you. If you stop this now, that'll be the end of it. I will not look for you, I will not pursue you. But if you don't, I will look for you, I will find you, and I will hurt you.\"\nEmail from Clark <kcent00@gmail.com> to David Deida <daviddeida273@gmail.com>: \nSubject: Re.: URGENT READ THIS\n\"ok ok, I will do this, please don't reveal my identity...\n\ni have attached the first picture\"\n1 attachment: maxresdefault.jpg\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-05-19 04:23",
+  "Email from Clark <kcent00@gmail.com> to David Deida <daviddeida273@gmail.com>:\nSubject: Re.: URGENT READ THIS\n<unable to retrieve>\n1 attachment: stuff.txt  (10MB)\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-05-19 06:53",
+  "Email from David Deida <daviddeida273@gmail.com> to Clark <kcent00@gmail.com>:\nSubject: Re.: URGENT READ THIS\n<Unable to retrieve>\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-05-19 07:12",
+  "Email from David Deida <daviddeida273@gmail.com> to Clark <kcent00@gmail.com>:\nSubject: Re.: URGENT READ THIS\n\"Clark you are not Bryan Mills, stop the hero act, get to work, time is ticking...ohh and you have 30 minutes to send me the first picture...just so I know you've started your assignment!\n\ntick tock, tick tock, tick tock\"\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-05-19 07:20",
+  "Email from David Deida <daviddeida273@gmail.com> to Clark <kcent00@gmail.com>:\nSubject: Re.: URGENT READ THIS\n\"good work, keep at it, i'll be in touch\"\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-05-23 06:20",
+  "Created file encrypted",
+  "File creation event"
+ ],
+ [
+  "2017-05-31 06:36",
+  "Launched MSPaint",
+  "Application install/run event"
+ ],
+ [
+  "2017-06-12 11:51",
+  "Launched Mozilla Thunderbird",
+  "Application install/run event"
+ ],
+ [
+  "2017-06-12 11:57",
+  "Email from David Deida <daviddeida273@gmail.com> to Clark <kcent00@gmail.com>:\nSubject: what a wonderful day!\n\"How is the task coming along, are we making progress?\"\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-06-12 12:00",
+  "Email from Clark <kcent00@gmail.com> to David Deida <daviddeida273@gmail.com>:\nSubject: Re.: what a wonderful day!\n\"Yes we are, now what?\"\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-06-12 13:06",
+  "Email from David Deida <daviddeida273@gmail.com> to Clark <kcent00@gmail.com>:\nSubject: Re.: what a wonderful day!\nWhen you are ready, I want you to to send some images to an acquaintance - email is sassypenguin0@gmail.com\n\nThen bundle the lot up and send them to me!\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-06-14 07:00",
+  "Created file thestuff.zip",
+  "File creation event"
+ ],
+ [
+  "2017-06-14 07:00",
+  "Created file thestuff.zip",
+  "File creation event"
+ ],
+ [
+  "2017-06-14 07:01",
+  "Email from Clark <kcent00@gmail.com> <kcent00@gmail.com> to Sassy Penguinn <sassypenguin0@gmail.com>\nSubject: the stuff\n\"The stuff as requested...\"\n1 attachment: stuff.txt (10MB)\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-06-14 07:04",
+  "Email from Sassy Penguin <sassypenguin0@gmail.com> to David Deida <daviddeida273@gmail.com>:\nSubject: Fwd: the stuff\n\"He has delivered the good\"\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-06-14 07:15",
+  "Email from David Deida <daviddeida273@gmail.com> to Clark <kcent00@gmail.com>:\nSubject: Fwd: the stuff\n\"Well done Clark...looks like your secret might be safe after all...\n\nI went 20 pictures delivered to me...and then your secret shall remain quiet... \"\n",
+  "Email interaction event"
+ ],
+ [
+  "2017-06-14 07:38",
+  "cat pictures - Google Search\nhttps://www.google.com.au/search?q=cat+pictures&tbm=isch&imgil=VCw6XV-uzkP-nM%253A%253B5iFNlS8xKXWs8M%253Bhttp%25253A%25252F%25252Fwww.i-digitalpixel.com%25252Fcat-images.html&source=iu&pf=m&fir=VCw6XV-uzkP-nM%253A%252C5iFNlS8xKXWs8M%252C_&usg=__f9z-FAfDllK5XqDCf1dyk9pIFq8%3D&biw=1366&bih=659&dpr=1&ved=0ahUKEwikzsy9tbfUAhUBi7wKHRWeABUQyjcIOw&ei=kxE-WeS4J4GW8gWVvIKoAQ#imgrc=ZGXCeasAZAxoEM:",
+  47360064321972
+ ],
+ [
+  "2017-06-14 07:38",
+  "Redirect Notice\nhttps://www.google.com.au/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=0ahUKEwiRrNGN_7vUAhUDErwKHd2JC0wQjBwIBA&url=https%3A%2F%2Fwww.petfinder.com%2Fwp-content%2Fuploads%2F2012%2F11%2F91615172-find-a-lump-on-cats-skin-632x475.jpg&psig=AFQjCNH8UeLAwpy9ErBTNodpUAP5rbDicA&ust=1497326411405752&cad=rjt",
+  47357197181503
+ ],
+ [
+  "2017-06-14 07:38",
+  "cat pictures - Google Search\nhttps://www.google.com.au/search?q=cat+pictures&tbm=isch&imgil=VCw6XV-uzkP-nM%253A%253B5iFNlS8xKXWs8M%253Bhttp%25253A%25252F%25252Fwww.i-digitalpixel.com%25252Fcat-images.html&source=iu&pf=m&fir=VCw6XV-uzkP-nM%253A%252C5iFNlS8xKXWs8M%252C_&usg=__f9z-FAfDllK5XqDCf1dyk9pIFq8%3D&biw=1366&bih=659&dpr=1&ved=0ahUKEwikzsy9tbfUAhUBi7wKHRWeABUQyjcIOw&ei=kxE-WeS4J4GW8gWVvIKoAQ#imgrc=05qMyLkCO8jcmM:",
+  47356410870553
+ ],
+ [
+  "2017-06-14 07:42",
+  "None\nhttp://www.youtube.com/",
+  125508306622791
+ ],
+ [
+  "2017-06-14 07:42",
+  "YouTube\nhttps://www.youtube.com/",
+  47360296250519
+ ],
+ [
+  "2017-06-14 07:43",
+  "Formatted a drive with TrueCrypt",
+  "Application install/run event"
+ ],
+ [
+  "2017-06-14 07:48",
+  "Created file stuff.txt",
+  "File creation event"
+ ],
+ [
+  "2017-06-14 07:50",
+  "Launched TrueCrypt",
+  "Application install/run event"
+ ],
+ [
+  "2017-06-14 07:57",
+  "Launched WPS Writer",
+  "Application install/run event"
+ ],
+ [
+  "2017-06-14 08:01",
+  "Created file Links.docx",
+  "File creation event"
+ ],
+ [
+  "2017-06-14 08:04",
+  "Email from Clark <kcent00@gmail.com> to David Deida <daviddeida273@gmail.com>:\nSubject: Fwd: the stuff\n\"I have the stuff...you will need to contact me directly...\"\n1 attachment: stuff.txt",
+  "Email interaction event"
+ ],
+ [
+  "2017-06-14 11:02",
+  "Created file #3276.doc",
+  "File creation event"
+ ],
+ [
+  "2017-06-14 11:15",
+  "Cat Haven where Every Cat Matters - Kittens & Cats for adoption & sale\nhttp://www.cathaven.com.au/",
+  125510134741190
+ ],
+ [
+  "2017-06-21 09:05",
+  "Created file #3295.doc",
+  "File creation event"
+ ],
+ [
+  "2017-07-27 13:32",
+  "Adopt a homeless cat or kitten from Cat Haven\nhttp://www.cathaven.com.au/adopt/",
+  125510991266619
+ ],
+ [
+  "2017-07-27 14:26",
+  "Created file #3840.doc",
+  "File creation event"
+ ]
+]

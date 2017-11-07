@@ -31,14 +31,14 @@ def pretty_printer(o):
     pp.pprint(o)
 
 
-path_to_db = r'C:\Users\ric\Dropbox\Uni\CSG5126\Assignment 2\autopsy.db'
+path_to_db = r'C:\Users\rdapaz\Dropbox\Uni\CSG5126\Assignment 2\autopsy.db'
 
 extensions = {}
 with sqlite3.connect(path_to_db) as conn:
     cursor = conn.cursor()
 
     sql = """
-    select extension, count(t.extension) from tsk_files t 
+    SELECT extension, count(t.extension) from tsk_files t 
     where t.md5 is not null group by 1 order by 2 desc
     """
     cursor.execute(sql)

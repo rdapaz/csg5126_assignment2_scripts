@@ -57,34 +57,26 @@ class Word:
 
 def make_data():
     data = """
-manifest|41887|0|0%
-png|20675|1|0%
-dll|19793|0|0%
-cat|12795|0|0%
-mui|9648|0|0%
-mum|7623|0|0%
-no extension|7349|36|0%
-exe|2856|0|0%
-sys|1415|0|0%
-jpg|1029|37|4%
-lnk|362|0|0%
-txt|361|3|1%
-bmp|298|0|0%
-db|80|0|0%
-mpg|53|0|0%
-doc|40|3|8%
-sqlite|28|0|0%
-zip|5|2|40%
-docx|4|4|100%
-tif|2|0|0%
-pdf|1|1|100%
+File system: NTFS
+Total capacity: 17,406,361,600 bytes = 16.2 GB
+Sector count: 33,996,800
+Bytes per sector: 512
+Bytes per cluster: 4,096
+Free clusters: 78,466 = 2% free
+Total clusters: 4,249,599
+NTFS version: 3.1
+Volume flags: 0x0000
+Volume GUID: {76244106-0D26-4AB8-9B41-2440BD9C35D0}
+Serial No.: 32858228 (hex)
+Serial No.: 28828532 (hex, rev)
+Serial No.: 679642418 (dec, rev)
 """.splitlines()
     """
     .splitlines()
 
         return data
     """
-    data = [x.split('|') for x in data if len(x) > 0]
+    data = [x.split(':') for x in data if len(x) > 0]
     # with open(r'C:\Users\ric\Desktop\Protect the Network - Closeout Report\lessons.json', 'r') as f:
         # data =json.load(f)
     # new_data = []
@@ -94,19 +86,19 @@ pdf|1|1|100%
     return data
 
 def main(bookmark, data=[], heading_rows=1):
-    my_path = r'C:\Users\ric\Dropbox\Uni\CSG5126\Assignment 2\CSG5126 Assignment 2 - Ricardo da Paz (P).docx'
+    my_path = r'C:\Users\rdapaz\Dropbox\Uni\CSG5126\Assignment 2\CSG5126 Assignment 2 - Ricardo da Paz_V2.docx'
     wd = Word(my_path)
-    wd.updateTable(bookmark, data, heading_rows)
+    # wd.updateTable(bookmark, data, heading_rows)
     # time.sleep(1)
-    # wd.updateIDs(bookmark, prefix="LES_")
+    wd.updateIDs(bookmark, prefix="R")
 
 def mock(data, **kwargs):
     pretty_print(data)
     
 if __name__ == "__main__":
     data = make_data()
-    # mock(bookmark='bk3', data=data, heading_rows=1)
-    main(bookmark='bk2', data=data, heading_rows=1)
+    mock(bookmark='bk3', data=data, heading_rows=1)
+    main(bookmark='runningsheet', data=data, heading_rows=1)
     # main(bookmark='Financials1', data=data, heading_rows=1)
 
 
