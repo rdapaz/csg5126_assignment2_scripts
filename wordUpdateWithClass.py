@@ -71,34 +71,28 @@ Serial No.: 32858228 (hex)
 Serial No.: 28828532 (hex, rev)
 Serial No.: 679642418 (dec, rev)
 """.splitlines()
-    """
-    .splitlines()
-
-        return data
-    """
-    data = [x.split(':') for x in data if len(x) > 0]
-    # with open(r'C:\Users\ric\Desktop\Protect the Network - Closeout Report\lessons.json', 'r') as f:
-        # data =json.load(f)
-    # new_data = []
-    # for k, v in data.items():
-    #     new_data.append([k, v])
-    # new_data = [x.split('|') for x in data if len(x) > 0]
-    return data
+    # data = [x.split(':') for x in data if len(x) > 0]
+    with open(r'C:\Users\rdapaz\projects\csg5126_assignment2_scripts\history.json', 'r') as f:
+        data =json.load(f)
+    new_data = []
+    for dttm, event, category in data:
+        new_data.append(['', dttm, event, category])
+    return new_data
 
 def main(bookmark, data=[], heading_rows=1):
     my_path = r'C:\Users\rdapaz\Dropbox\Uni\CSG5126\Assignment 2\CSG5126 Assignment 2 - Ricardo da Paz_V2.docx'
     wd = Word(my_path)
     # wd.updateTable(bookmark, data, heading_rows)
     # time.sleep(1)
-    wd.updateIDs(bookmark, prefix="R")
+    wd.updateIDs(bookmark, prefix="T")
 
 def mock(data, **kwargs):
     pretty_print(data)
     
 if __name__ == "__main__":
     data = make_data()
-    mock(bookmark='bk3', data=data, heading_rows=1)
-    main(bookmark='runningsheet', data=data, heading_rows=1)
+    # mock(bookmark='bk3', data=data, heading_rows=1)
+    main(bookmark='timeline', data=data, heading_rows=1)
     # main(bookmark='Financials1', data=data, heading_rows=1)
 
 
