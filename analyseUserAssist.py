@@ -11,7 +11,7 @@ def pretty_printer(o):
     pp.pprint(o)
 
 
-with open(r'C:\Users\ric\ownCloud\Uni\RegRipper\UAFiles.yaml', 'r') as yaml_file:
+with open(r'C:\Users\rdapaz\ownCloud\Uni\RegRipper\UAFiles.yaml', 'r') as yaml_file:
     data = yaml.load(yaml_file)
 
 execs = []
